@@ -3,7 +3,7 @@ Lightweight scripts for Light Sheet Microscopy image data compression and archiv
 
 # Dependencies:
 * Operating System == Windows or Linux
-* FFMPEG == 0.4.0 (The version 1.1.0 is also accessible,the original version was writen on 0.4.0)
+* FFMPEG == 0.4.0
 * Python == 3.6 or 3.7
 * numpy == 1.16.2
 * h5py == 2.9.0
