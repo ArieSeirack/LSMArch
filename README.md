@@ -15,7 +15,7 @@ Lightweight scripts for Light Sheet Microscopy image data compression and archiv
 2.Use `divide.py` to divide your image into lower 10-bit part and higher 6-bit part.  
 3.Edit or create the `path.txt` in the same directory of the scripts.  
 4.Save the path of FFMPEG executable program in the `path.txt`.  
-5.Try the following mode.
+5.Try the following modes.
 
 ## Dividing
 `python divide.py -i <input_dir> -o <output_dir>`  
