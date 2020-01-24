@@ -75,7 +75,9 @@ def picdevide(indir, outdir):
         resize = 3
 
     i = 0
-    for file in os.listdir(indir):
+    filenames = os.listdir(indir)
+    filenames.sort(key=lambda x:int(x[:-4]))
+    for file in filenames:
         img = cv2.imread(os.path.join(indir, file), -1)
         if resize == 1:
             im = img.astype(np.uint16)
