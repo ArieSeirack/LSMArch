@@ -17,6 +17,20 @@ Lightweight scripts for Light Sheet Microscopy image data compression and archiv
 4.Save the path of FFMPEG executable program in the `path.txt`.  
 5.Try the following mode.
 
+## Dividing
+`python divide.py -i <input_dir> -o <output_dir>`  
+
+For example,
+`python divide.py -i wholepics -o testin`  
+Then the original images in the `wholepics` will be divided into lower and higher part and saved in `testin` and generates `resize.txt`.
+
+### Explanation for the value in `resize.txt`
+* 0 means the original height and width enable compression
+* 1 means one row needs to be deleted
+* 2 means one column needs to be deleted
+* 3 means one column and one row need to be deleted
+
+
 ## Encoding
 `python lsmarch.py --encode -i <input_dir> -o <output_file_name> --crf=<crf_value>`  
 
