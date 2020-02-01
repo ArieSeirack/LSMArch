@@ -30,6 +30,11 @@ Then the original images in the `wholepics` will be divided into lower and highe
 * 2 means one column needs to be deleted
 * 3 means one column and one row need to be deleted
 
+## How to write `path.txt`
+For Windows, it can be `F:/ffmpeg-static/ffmpeg-20190923-3104100-win64-static/bin/ffmpeg.exe` or `F:\\ffmpeg-static\\ffmpeg-20190923-3104100-win64-static\\bin\\ffmpeg.exe`
+
+For Linux, it can be `/home/xxx/ffmpeg-4.2.2-amd64-static/ffmpeg`
+
 
 ## Encoding
 `python lsmarch.py --encode -i <input_dir> -o <output_file_name> --crf=<crf_value>`  
