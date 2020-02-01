@@ -114,7 +114,9 @@ def piccp(outdir, hdfname):
 
         cv2.imwrite(outdir + os.sep + "{:0>5d}".format(i) + ".tif", wholearr)
         i += 1
-
+        
+    os.remove("low.mkv")
+    os.remove("high.mkv")
     shutil.rmtree(os.path.join(outdir, 'low10'), True)
     shutil.rmtree(os.path.join(outdir, 'high6'), True)
 
