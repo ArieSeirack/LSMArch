@@ -11,6 +11,7 @@ import h5py
 import os
 import cv2
 import shutil
+import pickle
 
 
 def extract_from_hdf(hdfname, dsetname, outfilename):
@@ -40,12 +41,30 @@ def lavdecode(outdir, filename):
     f.close()
 
     filename = filename+".lav"
-    extract_from_hdf(filename, 'high6', 'high.mkv')
-    extract_from_hdf(filename, 'low10', 'low.mkv')
-    lowdecomp(outdir, ffmpegpath)
-    highdecomp(outdir, ffmpegpath)
-    piccp(outdir, filename)
-    print("Decoding Complete")
+    f = h5py.File(filename, 'r')
+    mode = f.attrs['decode mode']
+    if mode == 0:  # for lav that contains tif
+        extract_from_hdf(filename, 'high6', 'high.mkv')
+        extract_from_hdf(filename, 'low10', 'low.mkv')
+        lowdecomp(outdir, ffmpegpath)
+        highdecomp(outdir, ffmpegpath)
+        piccp(outdir, filename)
+        print("Decoding Complete")
+    elif mode == 1:  # for lav that contains other lavs
+        content = f.attrs['layers']
+        dtype = type(content).__name__
+        if dtype == 'ndarray':  # the bottom layer lav
+            layers = list(content)
+            for lav in layers:
+                if not os.path.exists(os.path.join(outdir, lav)):
+                    os.mkdir(os.path.join(outdir, lav))
+                extract_from_hdf(filename, lav, os.path.join(outdir, lav, lav+'.lav'))
+        elif dtype == 'bytes':  # the layer above the bottom
+            layers = list(pickle.loads(f.attrs['layers']))
+            for lav in layers:
+                if not os.path.exists(os.path.join(outdir, lav)):
+                    os.mkdir(os.path.join(outdir, lav))
+                extract_from_hdf(filename, lav, os.path.join(outdir, lav, lav+'.lav'))
 
 
 #  decompression for lower 10 bits
@@ -114,7 +133,7 @@ def piccp(outdir, hdfname):
 
         cv2.imwrite(outdir + os.sep + "{:0>5d}".format(i) + ".tif", wholearr)
         i += 1
-        
+
     os.remove("low.mkv")
     os.remove("high.mkv")
     shutil.rmtree(os.path.join(outdir, 'low10'), True)
