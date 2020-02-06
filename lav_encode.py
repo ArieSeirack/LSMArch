@@ -109,7 +109,7 @@ def savelav(filename, meta):
     lavfile.create_dataset("low10", dtype=lbdata.dtype, data=lbdata)
     lavfile.attrs['shape'] = meta[0]
     lavfile.attrs['crf'] = meta[1]
-
+    lavfile.attrs['decode mode'] = 0
     #  only support H6L10 and 16-bit image compression currently
     lavfile.attrs['encoding mode'] = 'H6L10'
     lavfile.attrs['bit depth'] = '16-bit'
