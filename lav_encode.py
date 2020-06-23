@@ -13,7 +13,7 @@ import os
 from PIL import Image
 
 
-def lavencode(indir, fname, crf):
+def lavencode(indir, fname, crf, gpu):
     highdir = os.path.join(indir, "high6", "%05d.tif")
     lowdir = os.path.join(indir, "low10", "%05d.tif")
 
@@ -37,8 +37,8 @@ def lavencode(indir, fname, crf):
         break
 
     #  compress two parts
-    highsize = highcomp(highdir, crf, ffmpegpath)
-    lowsize = lowcomp(lowdir, crf, ffmpegpath)
+    highsize = highcomp(highdir, crf, ffmpegpath, gpu)
+    lowsize = lowcomp(lowdir, crf, ffmpegpath, gpu)
     print("crf = "+crf+" encoding complete")
 
     #  calculate compression ratio
@@ -57,14 +57,23 @@ def lavencode(indir, fname, crf):
 
 
 # compression for higher 6 bits
-def highcomp(hidir, crf, ffmpegpath):
+def highcomp(hidir, crf, ffmpegpath, gpu):
     hmkv = os.path.join(os.getcwd(), "high.mkv")
-    hcprcmd = [ffmpegpath,
-               '-y',
-               '-i', hidir,
-               '-codec', 'libx265',
-               '-x265-params', 'lossless=1',
-               hmkv]
+    if gpu == 1:
+        hcprcmd = [ffmpegpath,
+                   '-y',
+                   '-i', hidir,
+                   '-codec', 'hevc_nvenc',
+                   '-preset', 'lossless',
+                   '-pix_fmt', 'yuv420p',
+                   hmkv]
+    else:
+        hcprcmd = [ffmpegpath,
+                   '-y',
+                   '-i', hidir,
+                   '-codec', 'libx265',
+                   '-x265-params', 'lossless=1',
+                   hmkv]
     print("crf = " + crf + " high6 encoding start")
     pipe = sp.Popen(hcprcmd, stdin=sp.PIPE, stderr=sp.PIPE, bufsize=10 ^ 12)
     pipe.communicate()
@@ -74,16 +83,27 @@ def highcomp(hidir, crf, ffmpegpath):
 
 
 #  compression for lower 10 bits
-def lowcomp(lowdir, crf, ffmpegpath):
+def lowcomp(lowdir, crf, ffmpegpath, gpu):
     lmkv = os.path.join(os.getcwd(), "low.mkv")
-    lcprcmd = [ffmpegpath,
-               '-y',
-               '-i', lowdir,
-               '-codec', 'libx265',
-               '-preset', 'medium',
-               '-pix_fmt', 'yuv420p10le',
-               '-x265-params', "crf="+crf,
-               lmkv]
+    if gpu == 1:
+        lcprcmd = [ffmpegpath,
+                   '-y',
+                   '-i', lowdir,
+                   '-codec', 'hevc_nvenc',
+                   '-preset', 'medium',
+                   '-pix_fmt', 'p010le',
+                   '-qp', crf,
+                   lmkv]
+    else:
+        lcprcmd = [ffmpegpath,
+                   '-y',
+                   '-i', lowdir,
+                   '-codec', 'libx265',
+                   '-preset', 'medium',
+                   '-pix_fmt', 'yuv420p10le',
+                   '-x265-params', "crf="+crf,
+                   lmkv]
+
     print("crf = " + crf + " low10 encoding start")
 
     pipe = sp.Popen(lcprcmd, stdin=sp.PIPE, stderr=sp.PIPE, bufsize=10 ^ 12)
