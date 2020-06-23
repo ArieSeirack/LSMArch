@@ -64,7 +64,7 @@ def picdevide(indir, outdir):
     width = shape[0]
     height = shape[1]
 
-    # zero means the original height and width enable compression, 1 means one row needs to be deleted
+    # 0 means the original height and width enable compression, 1 means one row needs to be deleted
     # 2 means one column needs to be deleted, 3 means one column and one row need to be deleted
     resize = 0
     if height % 2 == 1:  # height is odd, delete one row
@@ -76,7 +76,7 @@ def picdevide(indir, outdir):
 
     i = 0
     filenames = os.listdir(indir)
-    filenames.sort(key=lambda x:int(x[:-4]))
+    filenames.sort(key=lambda x:int(x[:-4]))  # sort file by order
     for file in filenames:
         img = cv2.imread(os.path.join(indir, file), -1)
         if resize == 1:
@@ -89,6 +89,8 @@ def picdevide(indir, outdir):
             im = img.astype(np.uint16)
             new = np.delete(im, -1, axis=0)  # delete one row
             new = np.delete(new, -1, axis=1)  # delete one column
+        else:
+            new = img.astype(np.uint16)
 
         print(file)
         #  divide the image into lower 10 bits and higher 6 bits
@@ -99,11 +101,3 @@ def picdevide(indir, outdir):
         if i == N:
             break
     return resize
-
-
-if __name__ == "__main__":
-    para = initpara(sys.argv[1:])
-    sizechange = picdevide(para[0], para[1])
-    f = open(os.path.join(os.getcwd(), "resize.txt"), 'w')
-    f.write(str(sizechange))
-    f.close()
