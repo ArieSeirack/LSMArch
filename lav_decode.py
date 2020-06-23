@@ -90,6 +90,7 @@ def highdecomp(outdir, ffmpegpath):
     hotif = os.path.join(outdir, 'high6', '%05d.tif')
     excmd = [ffmpegpath,
              '-i', hmkv,
+             '-pix_fmt', 'gray',
              hotif]
 
     pipe = sp.Popen(excmd, stdin=sp.PIPE, stderr=sp.PIPE, bufsize=10 ^ 12)
@@ -138,4 +139,3 @@ def piccp(outdir, hdfname):
     os.remove("high.mkv")
     shutil.rmtree(os.path.join(outdir, 'low10'), True)
     shutil.rmtree(os.path.join(outdir, 'high6'), True)
-
