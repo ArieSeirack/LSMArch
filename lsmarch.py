@@ -38,8 +38,8 @@ def initpara(argv):
             print("\nDecoding\npython lsmarch.py --decode -i <input_lav_file_name> -o <output_dir>")
             print("\nCheck the details of LAV file")
             print("\nDecoding\npython lsmarch.py --check -i <lav_file_name>")
-            print("\nStack\npython lsmarch.py --stack -i <input_lav_file_names> -m <mode> -o <output_file_name>")
-            print("\nStack Delete\npython lsmarch.py --stackdel -i <input_lav_file_names> -n <sub_lav_file_name>")
+            print("\nStack\npython lsmarch.py --stack -i <input_lav_dir> -m <mode> -o <output_file_name>")
+            print("\nStack Delete\npython lsmarch.py --stackdel -i <input_lav_file_name> -n <sub_lav_file_name>")
             sys.exit()
 
         if opt == "--encode":
@@ -126,11 +126,3 @@ if __name__ == "__main__":
         filename = para[1]
         dsname = para[2]
         stackdel(filename, dsname)
-
-
-
-
-
-
-
-
