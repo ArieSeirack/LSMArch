@@ -10,6 +10,7 @@ import numpy as np
 import h5py
 import os
 import pickle
+from lav_check import lavcheck
 
 
 def lavstack(indirs, mode, outname):
@@ -51,10 +52,28 @@ def lavstack(indirs, mode, outname):
     outlav.attrs['decode mode'] = 1  # 1 means this lav is a stack of lav files
 
 
+def stackdel(filename, dsname):
+    hf = h5py.File(filename+".lav", "r+")
+    newf = h5py.File("new.lav", "w")
+    # delete one dataset from the top layer of the lav tree
+    # note: the size of lav file will not change even if one dataset was deleted
+    # the delete function only makes the memory not accessible
+    if dsname in hf.keys():  # delete one dataset from the lav tree
+        hf.__delitem__(dsname)
 
+    for dset in hf.keys():
+        dataset = hf[dset]
+        newf.create_dataset(dset, dtype=dataset.dtype, data=dataset)
 
-
-
-
-
-
+    # the following steps will delete the name in the layer list/dict
+    mode = hf.attrs['decode mode']
+    if mode == 1:
+        layer = pickle.loads(hf.attrs['layers'])
+        layer.pop(dsname)
+        piclayers = pickle.dumps(layer, protocol=0)
+        newf.attrs['layers'] = piclayers
+        newf.attrs['decode mode'] = mode
+    hf.close()
+    newf.close()
+    os.remove(filename+".lav")
+    os.rename("new.lav", filename+".lav")
