@@ -35,4 +35,3 @@ def lavcheck(hdfname):
         layer = pickle.loads(hf.attrs['layers'])
         print(layer)
 
-
