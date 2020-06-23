@@ -3,13 +3,19 @@ Lightweight scripts for Light Sheet Microscopy image data compression and archiv
 
 # Dependencies:
 * Operating System == Windows or Linux
-* FFMPEG >= 4.2.1 
+* FFmpeg >= 4.2.1 
 * Python == 3.6 or 3.7
 * numpy == 1.16.2
 * h5py == 2.9.0
 * Pillow == 6.0.0
 * opencv-python == 4.0.1
 * CUDA >= 9
+
+# About FFmpeg
+The latest version of FFmpeg can be downloaded from https://www.ffmpeg.org/download.html. The static version of FFmpeg may be only work on CPU mode.
+
+To support GPU acceleration, follow the steps of 'Getting Started with FFmpeg/libav using NVIDIA GPUs' on this website https://developer.nvidia.com/ffmpeg
+
 
 # Example usage
 1.Copy the scripts to the workding directory.  
